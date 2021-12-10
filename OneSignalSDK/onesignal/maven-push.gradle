@@ -20,107 +20,109 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-class Global {
-    static def POM_NAME = 'OneSignal'
-    static def POM_ARTIFACT_ID = 'OneSignal'
-    static def POM_PACKAGING = 'aar'
-    static def VERSION_NAME = '3.16.0'
+group = 'com.github.anvu69'
 
-    static def GROUP_ID = 'com.onesignal'
-    static def POM_DESCRIPTION = 'OneSignal Android SDK'
-    static def POM_URL = 'https://github.com/one-signal/OneSignal-Android-SDK'
-    static def POM_SCM_URL = 'https://github.com/one-signal/OneSignal-Android-SDK'
-    static def POM_SCM_CONNECTION = 'scm:git:https://github.com/one-signal/OneSignal-Android-SDK'
-    static def POM_SCM_DEV_CONNECTION = 'scm:git:https://github.com/one-signal/OneSignal-Android-SDK'
-    static def POM_LICENCE_NAME = 'MIT License'
-    static def POM_LICENCE_URL = 'https://raw.githubusercontent.com/one-signal/OneSignal-Android-SDK/master/LICENSE'
-    static def POM_LICENCE_DIST = 'repo'
-    static def POM_DEVELOPER_ID = 'OneSignal'
-    static def POM_DEVELOPER_NAME = 'Josh Kasten'
-    static def SNAPSHOT_REPOSITORY_URL = 'https://oss.sonatype.org/content/repositories/snapshots'
-    static def RELEASE_REPOSITORY_URL = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-}
+// class Global {
+//     static def POM_NAME = 'OneSignal'
+//     static def POM_ARTIFACT_ID = 'OneSignal'
+//     static def POM_PACKAGING = 'aar'
+//     static def VERSION_NAME = '3.16.10'
 
-def isReleaseBuild() {
-    return !Global.VERSION_NAME.contains("SNAPSHOT")
-}
+//     static def GROUP_ID = 'com.onesignal'
+//     static def POM_DESCRIPTION = 'OneSignal Android SDK'
+//     static def POM_URL = 'https://github.com/one-signal/OneSignal-Android-SDK'
+//     static def POM_SCM_URL = 'https://github.com/one-signal/OneSignal-Android-SDK'
+//     static def POM_SCM_CONNECTION = 'scm:git:https://github.com/one-signal/OneSignal-Android-SDK'
+//     static def POM_SCM_DEV_CONNECTION = 'scm:git:https://github.com/one-signal/OneSignal-Android-SDK'
+//     static def POM_LICENCE_NAME = 'MIT License'
+//     static def POM_LICENCE_URL = 'https://raw.githubusercontent.com/one-signal/OneSignal-Android-SDK/master/LICENSE'
+//     static def POM_LICENCE_DIST = 'repo'
+//     static def POM_DEVELOPER_ID = 'OneSignal'
+//     static def POM_DEVELOPER_NAME = 'Josh Kasten'
+//     static def SNAPSHOT_REPOSITORY_URL = 'https://oss.sonatype.org/content/repositories/snapshots'
+//     static def RELEASE_REPOSITORY_URL = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+// }
 
-def getRepositoryUsername() {
-    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
-}
+// def isReleaseBuild() {
+//     return !Global.VERSION_NAME.contains("SNAPSHOT")
+// }
 
-def getRepositoryPassword() {
-    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
-}
+// def getRepositoryUsername() {
+//     return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+// }
 
-afterEvaluate { project ->
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+// def getRepositoryPassword() {
+//     return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+// }
 
-                pom.groupId = Global.GROUP_ID
-                pom.artifactId = Global.POM_ARTIFACT_ID
-                pom.version = Global.VERSION_NAME
+// afterEvaluate { project ->
+//     uploadArchives {
+//         repositories {
+//             mavenDeployer {
+//                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                repository(url: Global.RELEASE_REPOSITORY_URL) {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
-                snapshotRepository(url: Global.SNAPSHOT_REPOSITORY_URL) {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
+//                 pom.groupId = Global.GROUP_ID
+//                 pom.artifactId = Global.POM_ARTIFACT_ID
+//                 pom.version = Global.VERSION_NAME
 
-                pom.project {
-                    name Global.POM_NAME
-                    packaging Global.POM_PACKAGING
-                    description Global.POM_DESCRIPTION
-                    url Global.POM_URL
+//                 repository(url: Global.RELEASE_REPOSITORY_URL) {
+//                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+//                 }
+//                 snapshotRepository(url: Global.SNAPSHOT_REPOSITORY_URL) {
+//                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+//                 }
 
-                    scm {
-                        url Global.POM_SCM_URL
-                        connection Global.POM_SCM_CONNECTION
-                        developerConnection Global.POM_SCM_DEV_CONNECTION
-                    }
+//                 pom.project {
+//                     name Global.POM_NAME
+//                     packaging Global.POM_PACKAGING
+//                     description Global.POM_DESCRIPTION
+//                     url Global.POM_URL
 
-                    licenses {
-                        license {
-                            name Global.POM_LICENCE_NAME
-                            url Global.POM_LICENCE_URL
-                            distribution Global.POM_LICENCE_DIST
-                        }
-                    }
+//                     scm {
+//                         url Global.POM_SCM_URL
+//                         connection Global.POM_SCM_CONNECTION
+//                         developerConnection Global.POM_SCM_DEV_CONNECTION
+//                     }
 
-                    developers {
-                        developer {
-                            id Global.POM_DEVELOPER_ID
-                            name Global.POM_DEVELOPER_NAME
-                        }
-                    }
-                }
-            }
-        }
-    }
+//                     licenses {
+//                         license {
+//                             name Global.POM_LICENCE_NAME
+//                             url Global.POM_LICENCE_URL
+//                             distribution Global.POM_LICENCE_DIST
+//                         }
+//                     }
 
-    signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
-    }
+//                     developers {
+//                         developer {
+//                             id Global.POM_DEVELOPER_ID
+//                             name Global.POM_DEVELOPER_NAME
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
 
-    //task androidJavadocs(type: Javadoc) {
-    //source = android.sourceSets.main.allJava
-    //}
+//     signing {
+//         required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+//         sign configurations.archives
+//     }
 
-    //task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    //classifier = 'javadoc'
-    //from androidJavadocs.destinationDir
-    //}
+//     //task androidJavadocs(type: Javadoc) {
+//     //source = android.sourceSets.main.allJava
+//     //}
 
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
+//     //task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//     //classifier = 'javadoc'
+//     //from androidJavadocs.destinationDir
+//     //}
 
-    artifacts {
-        archives androidSourcesJar
-    }
-}
+//     task androidSourcesJar(type: Jar) {
+//         classifier = 'sources'
+//         from android.sourceSets.main.java.sourceFiles
+//     }
+
+//     artifacts {
+//         archives androidSourcesJar
+//     }
+// }
