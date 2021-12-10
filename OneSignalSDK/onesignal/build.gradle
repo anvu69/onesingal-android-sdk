@@ -46,15 +46,15 @@ dependencies {
     // play-services-ads-identifier:15.0.0 first version
     //   Classes used to live in play-services-base before this
     // play-services-ads-identifier:16.0.0 is the last version before going to AndroidX
-    implementation 'com.google.android.gms:play-services-ads-identifier:[15.0.0, 16.0.99]'
+    implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0'
 
     // :play-services-base:16.1.0 is the last version before going to AndroidX
     // Required for GoogleApiAvailability
-    implementation 'com.google.android.gms:play-services-base:[10.2.1, 16.1.99]'
+    implementation 'com.google.android.gms:play-services-base:16.1.0'
 
     // firebase-messaging:18.0.0 is the last version before going to AndroidX
     // firebase-messaging:17.6.0 is the max version since we still have code looking for FirebaseInstanceIdService
-    implementation 'com.google.firebase:firebase-messaging:[10.2.1, 17.3.99]'
+    implementation 'com.google.firebase:firebase-messaging:17.6.0'
 
     // Huawei PushKit
     // KEEP as "compileOnly", so OneSignal isn't a direct dependency in the POM file.
